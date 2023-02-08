@@ -7,7 +7,8 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import AddModal from './AddModal';
-import "../App.css"
+import "../App.css";
+
 
 const columns = [
     { field: 'id', headerName: '#', width: 70 },
@@ -19,7 +20,7 @@ const columns = [
         headerName: 'Sub Status',
         description: 'This column has a value getter and is not sortable.',
         sortable: false,
-        width: 160,
+        width: 130,
     },
     { field: 'status', headerName: 'Status', width: 130 },
     { field: 'technician', headerName: 'Technician', width: 130 },
@@ -37,6 +38,8 @@ export default function Table() {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [searchTerm, setSearchTerm] = useState("")
+    const [selectedRow, setSelectedRow] = useState("");
+    const [modelMode, setModelMode] = useState("new");
 
 
     const getData = () => {
@@ -108,7 +111,17 @@ export default function Table() {
         // console.log("SEarched Data", searchedData)
         // setGridData(searchedData);
     }
-
+    const deleteRow = () => {
+        let filteredData = data.filter((e) => {
+            return e.id !== selectedRow;
+        })
+        let filteredGridData = gridData.filter((e) => {
+            return e.id !== selectedRow;
+        })
+        setData(filteredData);
+        setGridData(filteredGridData)
+        setSelectedRow();
+    }
     return (
         <>
             <Stack direction={"row"} spacing={1} m={2}>
@@ -150,7 +163,28 @@ export default function Table() {
                 <IconButton color="primary" onClick={handleOpen}>
                     <AddCircleIcon />
                 </IconButton>
-                <AddModal open={open} handleClose={handleClose} />
+                {
+                    selectedRow && (
+                        <>
+                            <IconButton color="primary" onClick={() => {
+                                setModelMode("edit")
+                                handleOpen();
+                            }}>
+                                <FaEdit />
+                            </IconButton>
+                            <IconButton color="primary" onClick={deleteRow}>
+                                <DeleteIcon />
+                            </IconButton>
+                            <IconButton color="primary" onClick={() => {
+                                setModelMode("info");
+                                handleOpen();
+                            }}>
+                                <InfoIcon />
+                            </IconButton>
+                        </>
+                    )
+                }
+                <AddModal open={open} handleClose={handleClose} data={gridData.find(e => e.id === selectedRow)} mode={modelMode} />
             </Stack>
             <div style={{ height: 450, width: '100%' }}>
                 <DataGrid
@@ -158,7 +192,10 @@ export default function Table() {
                     columns={columns}
                     pageSize={8}
                     rowsPerPageOptions={[8]}
-                    checkboxSelection
+                    onSelectionModelChange={(id) => {
+                        setSelectedRow(id[0])
+                    }}
+                    selectionModel={selectedRow}
                 />
             </div>
         </>

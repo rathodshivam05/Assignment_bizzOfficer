@@ -19,8 +19,8 @@ const style = {
     p: 4,
 };
 
-export default function AddModal({ open, handleClose }) {
-
+export default function AddModal({ open, handleClose, mode, data }) {
+    console.log("mode and data", mode, data)
     return (
         <div>
             {/* <Button onClick={handleOpen}>Open modal</Button> */}
@@ -36,7 +36,7 @@ export default function AddModal({ open, handleClose }) {
                     </Typography>
                     <form action="">
                         <Box className="box">
-                            <Stack spacing={2}>
+                            <Stack spacing={2} className="stk1">
                                 <input type="text" placeholder=' Account Name' />
                                 <input type="text" placeholder=' Contact Name' />
                                 <input type="number" placeholder='Mobile' />
@@ -64,7 +64,7 @@ export default function AddModal({ open, handleClose }) {
                                 <input type="checkbox" />Billable
                                 <input type="checkbox" />Package Service
                             </Stack>
-                            <Stack spacing={2}>
+                            <Stack spacing={2} className="stk2">
                                 <select name="" id="">
                                     <option value="">Select Case Channel</option>
                                     <option value="">Primary</option>
@@ -107,15 +107,17 @@ export default function AddModal({ open, handleClose }) {
                                 <select name="" id="">
                                     <option value="">Select Reason</option>
                                 </select>
-                                <input type="number" value='1' />
+                                <input type="number" placeholder='1' />
                                 <input type="text" placeholder='Products Other details' />
                                 <Stack direction="row">
                                     <input type="text" placeholder='Agent' value="Tester" disabled />
                                 </Stack>
                             </Stack>
                         </Box>
-                        <button>CANCEL</button>
-                        <button>SAVE</button>
+                        <Stack spacing={2} direction="row">
+                            <button>CANCEL</button>
+                            <button>SAVE</button>
+                        </Stack>
                     </form>
                 </Box>
             </Modal>

@@ -1,5 +1,5 @@
 .filters {
-    width: 12%;
+    width: 5%;
     font-size: 13px;
 }
 
@@ -25,11 +25,14 @@
     margin: auto;
 }
 
-input {
-    width: 100%;
-    padding: 3px;
+.stk1 input,
+select {
+    width: 220% !important;
+    padding: 7px;
 }
 
+.stk2 input,
 select {
-    padding: 3px;
+    width: 180% !important;
+    padding: 7px;
 }
