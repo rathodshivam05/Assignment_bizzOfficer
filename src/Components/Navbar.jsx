@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function Navbar() {
     return (
@@ -30,6 +31,15 @@ export default function Navbar() {
                     >
                         Cases
                     </Typography>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        sx={{ mr: 2 }}
+                    >
+                        <LogoutIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
         </Box>

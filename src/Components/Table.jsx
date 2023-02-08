@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Stack } from '@mui/system';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { FaTrello, FaCalendarAlt, FaEdit } from "react-icons/fa";
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
+import AddModal from './AddModal';
 import "../App.css"
 
 const columns = [
@@ -21,13 +27,17 @@ const columns = [
 
 ];
 
-
 export default function Table() {
     const [data, setData] = useState([]);
     const [caseTypeFilter, setCaseTypeFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [caseFilter, setCaseFilter] = useState("");
     const [gridData, setGridData] = useState([]);
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [searchTerm, setSearchTerm] = useState("")
+
 
     const getData = () => {
         fetch("https://bizzofficer-json.vercel.app/data")
@@ -79,20 +89,35 @@ export default function Table() {
             if (caseName && value) {
                 value = e.status === caseName
             }
+            if (searchTerm && value) {
+                value = e.caseNumber.includes(searchTerm) || e.title.includes(searchTerm) || e.product.includes(searchTerm) || e.subStatus.includes(searchTerm) || e.status.includes(searchTerm) || e.technician.includes(searchTerm) || e.technicianStatus.includes(searchTerm)
+            }
             return value;
         })
         setGridData(filteredData);
     };
 
+    const handleSearch = () => {
+        filterData(caseTypeFilter, statusFilter, caseFilter)
+        // console.log("searchTerm", searchTerm)
+        // let searchedData = gridData.filter((el) => {
+        //     return (
+        //         el.caseNumber.includes(searchTerm) || el.title.includes(searchTerm) || el.product.includes(searchTerm) || el.subStatus.includes(searchTerm) || el.status.includes(searchTerm) || el.technician.includes(searchTerm) || el.technicianStatus.includes(searchTerm)
+        //     )
+        // });
+        // console.log("SEarched Data", searchedData)
+        // setGridData(searchedData);
+    }
+
     return (
         <>
-            <Stack direction={"row"} spacing={3} m={2}>
-                <select name="" id="" className='filters'>
+            <Stack direction={"row"} spacing={1} m={2}>
+                <select className='filters'>
                     <option value="" >All Channels</option>
                     <option value="">Primary</option>
                     <option value="">Secondary</option>
                 </select>
-                <select name="" value={caseTypeFilter} onChange={(e) => handleOnchange(e, "caseType")}>
+                <select className='filters' value={caseTypeFilter} onChange={(e) => handleOnchange(e, "caseType")}>
                     {/* title */}
                     <option value="">All Case Type</option>
                     <option value="Installation">Installation</option>
@@ -100,22 +125,32 @@ export default function Table() {
                     <option value="Replacement">Replacement</option>
                     <option value="Incidende">Incidende</option>
                 </select>
-                <select value={statusFilter} onChange={(e) => handleOnchange(e, "status")}>
+                <select className='filters' value={statusFilter} onChange={(e) => handleOnchange(e, "status")}>
                     {/* sub cases */}
                     <option value="">All Status</option>
                     <option value="Completed">Completed</option>
                     <option value="New">New</option>
                     <option value="Cancelled">Cancelled</option>
                 </select>
-                <select value={caseFilter} onChange={(e) => handleOnchange(e, "case")} >
+                <select className='filters' value={caseFilter} onChange={(e) => handleOnchange(e, "case")} >
                     {/* status */}
                     <option value="">All Cases</option>
                     <option value="Open">Open</option>
                     <option value="Closed">Closed</option>
                     <option value="Resolved">Resolved</option>
                 </select>
-                <input type="text" placeholder='Search' />
-                <button>Search</button>
+                <input type="text" id='inp' value={searchTerm} placeholder='   Search' onChange={(e) => setSearchTerm(e.target.value)} />
+                <button className='btn' onClick={handleSearch}>Search</button>
+                <IconButton color="primary">
+                    <FaTrello />
+                </IconButton>
+                <IconButton color="primary">
+                    <FaCalendarAlt />
+                </IconButton>
+                <IconButton color="primary" onClick={handleOpen}>
+                    <AddCircleIcon />
+                </IconButton>
+                <AddModal open={open} handleClose={handleClose} />
             </Stack>
             <div style={{ height: 450, width: '100%' }}>
                 <DataGrid
